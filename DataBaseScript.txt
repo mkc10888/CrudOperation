@@ -1,0 +1,61 @@
+create database ESource
+
+CREATE TABLE [dbo].[tblEmployeeInfo1](
+[Id] [int] IDENTITY(1,1) NOT NULL,
+[Name] [varchar](50) NOT NULL,
+[Designation] [varchar](50) NOT NULL,
+[Department] [varchar](50) NOT NULL
+)
+---------------------------------------------------
+CREATE procedure [dbo].[get_Employees]
+(
+@Id int
+)
+as begin
+
+If @Id>0
+Begin
+Select * from tblEmployeeInfo where Id=@Id
+End
+
+else
+Begin
+Select * from tblEmployeeInfo order by Id desc
+End
+End
+
+GO
+
+----------------------------------------------------
+
+CREATE procedure [dbo].[sp_Employees](
+@StmtType nvarchar(50),
+@Id int,
+@Name varchar(50),
+@Designation varchar(50),
+@Department varchar(50)
+)
+
+as begin
+
+If @StmtType='Insert'
+Begin
+Insert into tblEmployeeInfo (Name,Designation,Department) values (@Name,@Designation,@Department)
+Select SCOPE_IDENTITY() as 'ID'
+End
+
+If @StmtType='Update'
+Begin
+Update tblEmployeeInfo set Name=@Name,Designation=@Designation,Department=@Department where Id=@Id
+select @Id as 'ID'
+End
+
+If @StmtType='Delete'
+Begin
+Delete from tblEmployeeInfo where Id=@Id
+select @Id as 'ID'
+End
+
+End
+
+GO
